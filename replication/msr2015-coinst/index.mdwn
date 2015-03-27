@@ -1,0 +1,31 @@
+[[!meta title="Roberto Di Cosmo: replication package - msr-2015 "]]
+
+# Replication package for MSR 2015
+
+We provide here the information necessary to replicate the historical analysis of coinstallability issues in the Debian distribution described in the article
+*A historical analysis of Debian package incompatibilities* by 
+Maelick Claes, Tom Mens, Roberto Di Cosmo and Jérôme Vouillon.
+
+This information consists of the code and scripts used to retrieve and analyse the historical information from the [snapshot.debian.net](http://snapshot.debian.net) archive.
+
+
+The instruction provided here are intended for execution on a *nix system, especially a GNU/Linux based one, and preferentially a Debian based one, where the prerequisite tools are pre-packaged.
+
+## Prerequisites
+
+Install or compile [the *coinst* tool](https://github.com/vouillon/coinst), which is [described elsewhere](http://coinst.irill.org). On a debian system, just issue the command
+
+```bash
+apt-get install coinst
+```
+
+## Step 1: retrieve the historical data, and run `coinst`
+
+The `bash` script [process.sh](process.sh) downloads all the needed historical data from the [snapshot.debian.net](http://snapshot.debian.net) archive, and runs the `coinst` tool on each data point.
+
+## Step 2: build the time series
+
+## Step 3: perform the statistical analysis
+
+
+
