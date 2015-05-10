@@ -1,0 +1,13 @@
+Package: DebianEvolData
+Type: Package
+Title: Debian historical data extraction
+Version: 1.0
+Date: 2014-08-21
+Author: Maëlick Claes <himself@maelick.net>
+Maintainer: Maëlick Claes <himself@maelick.net>
+Description: Utility package for downloading and processing Debian
+             packages metadata history.
+Depends: data.table, logging
+Imports: XML, reshape2, stringr, rjson, igraph, parallel
+License: GPL-3
+Encoding: UTF-8
