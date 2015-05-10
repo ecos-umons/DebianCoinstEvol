@@ -1,0 +1,11 @@
+## exportPattern("^[[:alpha:]]+")
+import(data.table)
+import(DebianEvolData)
+import(ggplot2)
+importFrom(reshape2, melt)
+import(directlabels)
+import(scales)
+import(survival)
+
+export(PlotHistory, PlotHistoryRatios, PlotHistoryNumberConflicts)
+export(PlotLifetimeHist, PlotPercentageConflictsHist, PlotLifetimeHistAlwaysConflicts)

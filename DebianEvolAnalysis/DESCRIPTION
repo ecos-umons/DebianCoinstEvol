@@ -1,0 +1,13 @@
+Package: DebianEvolAnalysis
+Type: Package
+Title: Debian historical data analysis
+Version: 1.0
+Date: 2014-08-21
+Author: Maëlick Claes <himself@maelick.net>
+Maintainer: Maëlick Claes <himself@maelick.net>
+Description: Utility package for analysing Debian packages metadata
+             history.
+Depends: data.table, ggplot2, survival
+Imports: reshape2, directlabels, scales, DebianEvolData
+License: GPL-3
+Encoding: UTF-8
