@@ -2,8 +2,8 @@ PlotTimeBeforeConflict <- function(version, datadir, filename=NULL,
                                    format=NULL) {
   file <- sprintf("%s/aggregate/%s/package-survival.rds", datadir, version)
   data <- readRDS(file)[first != min(first) & !is.na(first.conflict) &
-                            first != first.conflict,
-                            difftime(first.conflict, first, units="days")]
+                        first != first.conflict,
+                        difftime(first.conflict, first, units="days")]
   PlotDevice(function() {
     print(qplot(as.numeric(data), xlab="", ylab="") +
           theme(panel.background=element_rect(fill='white'),
@@ -39,20 +39,22 @@ PackageSurvival <- function(data) {
 PlotPackageSurvival <- function(version, datadir, filename=NULL, format=NULL) {
   file <- sprintf("%s/aggregate/%s/package-survival.rds", datadir, version)
   data <- readRDS(file)
+  data <- data[!is.na(last) & !is.na(first)] # packages that does not exist
+  data <- data[first != min(first)]
   surv <- PackageSurvival(data)
 
   PlotDevice(function() {
-    plot(survfit(surv ~ data$no.conflicts), col=c("red", "green"))
+    plot(survfit(surv ~ data$no.conflicts), mark.time=FALSE, col=c("red", "green"))
     legend(7, 1, c("Conflicts", "No conflict"), lty=1, col=c("red", "green"))
   }, sprintf("%s-noconflict-%s", filename, version), format, height=4)
 
   PlotDevice(function() {
-    plot(survfit(surv ~ data$always.conflicts), col=c("green", "red"))
+    plot(survfit(surv ~ data$always.conflicts), mark.time=FALSE, col=c("green", "red"))
     legend(7, 1, c("Occasionnally", "Always"), lty=1, col=c("green", "red"))
   }, sprintf("%s-always-%s", filename, version), format, height=4)
 
   PlotDevice(function() {
-    plot(survfit(surv ~ data[, first == first.conflict]), col=c("green", "red"))
+    plot(survfit(surv ~ data[, first == first.conflict]), mark.time=FALSE, col=c("green", "red"))
     legend(7, 1, c("After", "Introduction"), lty=1, col=c("green", "red"))
   }, sprintf("%s-firstday-%s", filename, version), format, height=4)
 
@@ -73,14 +75,14 @@ PlotConflictIntroductionSurvival <- function(version, datadir, filename=NULL, fo
   data <- readRDS(file)
   surv <- ConflictIntroductionSurvival(data)
   PlotDevice(function() {
-    plot(survfit(surv ~ 1), conf.int=FALSE)
+    plot(survfit(surv ~ 1), conf.int=FALSE, mark.time=FALSE)
   }, sprintf("%s-conflict-introduction-%s", filename, version), format, height=4)
   list(data, surv)
 }
 
 ConflictSurvival <- function(data, last.date) {
   rem <- data$rem.after
-  new <- data$new.before
+  new <- data$new.after
   death <- !is.na(rem)
   rem[is.na(rem)] <- last.date
   t <- difftime(rem, new, units="days") / 365.
@@ -92,10 +94,11 @@ PlotConflictSurvival <- function(version, datadir, filename=NULL, format=NULL) {
   conflicts <- readRDS(sprintf("%s/aggregate/%s/diff-history.rds", datadir, version))
   packages <- readRDS(sprintf("%s/aggregate/%s/package-survival.rds", datadir, version))
   data <- merge(conflicts, packages[, list(package, first)], by="package")
+  data <- data[!is.na(new.before)]
   surv <- ConflictSurvival(data, max(dates))
   PlotDevice(function() {
     plot(survfit(surv ~ data[, new.after == first]), mark.time=FALSE, col=c("green", "red"))
-    legend(7, 1, c("After package introduction", "Upon package introduction"), lty=1, col=c("green", "red"))
+    legend(5, 1, c("After package introduction", "Upon package introduction"), lty=1, col=c("green", "red"))
   }, sprintf("%s-conflict-removal-%s", filename, version), format, height=4)
   list(data, surv)
 }
