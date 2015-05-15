@@ -89,10 +89,13 @@ ConflictSurvival <- function(data, last.date) {
 
 PlotConflictSurvival <- function(version, datadir, filename=NULL, format=NULL) {
   dates <- as.character(readRDS(sprintf("%s/%s.rds", datadir, version))$date)
-  data <- readRDS(sprintf("%s/aggregate/%s/diff-history.rds", datadir, version))
+  conflicts <- readRDS(sprintf("%s/aggregate/%s/diff-history.rds", datadir, version))
+  packages <- readRDS(sprintf("%s/aggregate/%s/package-survival.rds", datadir, version))
+  data <- merge(conflicts, packages[, list(package, first)], by="package")
   surv <- ConflictSurvival(data, max(dates))
   PlotDevice(function() {
-    plot(survfit(surv ~ 1), conf.int=FALSE, mark.time=FALSE)
+    plot(survfit(surv ~ data[, new.after == first]), mark.time=FALSE, col=c("green", "red"))
+    legend(7, 1, c("After package introduction", "Upon package introduction"), lty=1, col=c("green", "red"))
   }, sprintf("%s-conflict-removal-%s", filename, version), format, height=4)
   list(data, surv)
 }
