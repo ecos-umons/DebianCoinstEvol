@@ -109,12 +109,12 @@ AggregateData <- function(versions, datadir="data", logdir="log") {
   addHandler(writeToFile, logger="aggregate", file=logfile)
 
   for (version in versions) {
-    ## AggregateMatrices(version, datadir)
-    ## AggregateDiffs(version, datadir)
+    AggregateMatrices(version, datadir)
+    AggregateDiffs(version, datadir)
     AggregateDiffHistory(version, datadir)
-    ## AggregateHistory(version, datadir)
-    ## AggregatePackageMetrics(version, datadir)
-    ## AggregatePackageSurvival(version, datadir)
-    ## AggregateConflictSurvival(version, datadir)
+    AggregateHistory(version, datadir)
+    AggregatePackageMetrics(version, datadir)
+    AggregatePackageSurvival(version, datadir)
+    AggregateConflictSurvival(version, datadir)
   }
 }
