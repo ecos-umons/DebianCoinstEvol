@@ -57,7 +57,7 @@ R CMD INSTALL DebianEvolAnalysis
 
 ## Step 1: retrieve and process the historical data
 
-First make sure there is a "data" folder where scripts will be run.
+First make sure there is a *data* folder where scripts will be run.
 Then run data retrieval script with Rscript:
 
 ```bash
@@ -81,7 +81,7 @@ you to have more memory.
 To avoid having to run data retrieval and processing step, we provide
 the required aggregated data sets as R serialized data.table objects.
 
-Make sure an "images" folder exists then run the analysis which will
+Make sure an *images* folder exists then run the analysis which will
 generate svg and pdf plots in this folder:
 
 ```bash
