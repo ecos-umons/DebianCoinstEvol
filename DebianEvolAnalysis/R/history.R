@@ -7,13 +7,17 @@ PlotHistoryData <- function(versions, datadir, FUNC, filename=NULL, format=NULL)
 PlotHistory <- function(versions, datadir, filename=NULL, format=NULL) {
   releases <- readRDS(file.path(datadir, "releases.rds"))
   PlotHistoryData(versions, datadir, function(data) {
-    print(PlotTS(data[, list(date, version, packages, conflicts)], releases))
+    p <- PlotTS(data[, list(date, version, packages, conflicts)])
+    print(PlotReleases(p, releases))
   }, filename, format)
 }
 
-PlotHistoryRatios <- function(versions, datadir, filename=NULL, format=NULL) {
+PlotHistoryRatios <- function(versions, datadir, filename=NULL, format=NULL, plot.releases=TRUE) {
+  if (plot.releases) releases <- readRDS(file.path(datadir, "releases.rds"))
   PlotHistoryData(versions, datadir, function(data) {
-    print(PlotTS(data[, list(date, version, " "=conflicts / packages)]))
+    p <- PlotTS(data[, list(date, version, " "=conflicts / packages)])
+    if (plot.releases) p <- PlotReleases(p, releases)
+    print(p)
   }, filename, format)
 }
 

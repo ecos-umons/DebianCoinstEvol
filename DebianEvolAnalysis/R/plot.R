@@ -6,7 +6,7 @@ cb.palette <- c("#0072B2", "#D55E00", "#CC79A7", "#E69F00", "#56B4E9", "#009E73"
 gs.palette <- c("#ffffff", "#cccccc", "#999999", "#999999", "#333333", "#000000")
 ## cb.palette <- c("red", "blue", "dark green", "orange", "purple", "dark grey")
 
-PlotBasicTS <- function(data, releases=NULL, ylab="") {
+PlotBasicTS <- function(data, ylab="") {
   data$date <- as.POSIXct(data$date)
   if ("version" %in% colnames(data)) {
     data <- melt(data, id=c("date", "version"))
@@ -16,14 +16,7 @@ PlotBasicTS <- function(data, releases=NULL, ylab="") {
     data <- melt(data, id="date")
     p <- ggplot(data, aes(x=date, y=value, colour=variable, group=variable))
   }
-  p <- p + xlab("Time") + ylab(ylab)
-  if (!is.null(releases)) {
-    p <- p + geom_vline(data=releases,
-                        aes(xintercept=as.numeric(as.POSIXct(release))))
-    p <- p + geom_vline(data=releases, linetype="dashed",
-                        aes(xintercept=as.numeric(as.POSIXct(freeze))))
-  }
-  p <- p +
+  p <- p + xlab("Time") + ylab(ylab) +
     theme(axis.text.x=element_text(angle=90, hjust=1),
           panel.background=element_rect(fill='white'),
           panel.grid.major=element_line(colour="#DEDEDE"),
@@ -32,11 +25,11 @@ PlotBasicTS <- function(data, releases=NULL, ylab="") {
                        limits=c(min(data$date), max(data$date)))
 }
 
-PlotTS <- function(data, releases=NULL, ylab="", scale.luminosity=40,
+PlotTS <- function(data, ylab="", scale.luminosity=40,
                    stack=FALSE, legend=FALSE, group.title="variable",
                    greyscale=FALSE) {
   palette <- if (greyscale) gs.palette else cb.palette
-  p <- PlotBasicTS(data, releases, ylab)
+  p <- PlotBasicTS(data, ylab)
   if (ncol(data) > 2) {
     if (stack) {
       p <- p + geom_area(colour="black", aes(fill=variable), position='stack')
@@ -55,6 +48,15 @@ PlotTS <- function(data, releases=NULL, ylab="", scale.luminosity=40,
         scale_colour_manual(values=palette)
     }
   } else p + geom_line(colour=palette[1]) + theme(legend.position="none")
+}
+
+PlotReleases <- function(p, releases) {
+  p +
+    geom_vline(data=releases, aes(xintercept=as.numeric(as.POSIXct(release)))) +
+    geom_vline(data=releases, linetype="dashed",
+               aes(xintercept=as.numeric(as.POSIXct(freeze)))) +
+    annotate("text", as.POSIXct(releases$release), 0, size=4,
+             label=releases$version, hjust=-0.2)
 }
 
 PlotDevice <- function(FUNC, filename=NULL, format=NULL, ...) {
