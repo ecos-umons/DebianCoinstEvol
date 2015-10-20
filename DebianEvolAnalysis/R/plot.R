@@ -20,8 +20,10 @@ PlotBasicTS <- function(data, ylab="") {
     theme(axis.text.x=element_text(angle=90, hjust=1),
           panel.background=element_rect(fill='white'),
           panel.grid.major=element_line(colour="#DEDEDE"),
+          panel.grid.major.x=element_blank(),
           panel.grid.minor=element_line(colour="white"))
-  p + scale_x_datetime(breaks="1 year", labels=date_format("%Y-%m"),
+  breaks <- seq.Date(as.Date("2005-01-01"), as.Date("2015-01-01"), by="year")
+  p + scale_x_datetime(breaks=as.POSIXct(breaks), labels=date_format("%Y"),
                        limits=c(min(data$date), max(data$date)))
 }
 
@@ -50,12 +52,13 @@ PlotTS <- function(data, ylab="", scale.luminosity=40,
   } else p + geom_line(colour=palette[1]) + theme(legend.position="none")
 }
 
-PlotReleases <- function(p, releases) {
+PlotReleases <- function(p, releases, ypos=0) {
   p +
-    geom_vline(data=releases, aes(xintercept=as.numeric(as.POSIXct(release)))) +
-    geom_vline(data=releases, linetype="dashed",
+    geom_vline(data=releases, color="#DEDEDE",
+               aes(xintercept=as.numeric(as.POSIXct(release)))) +
+    geom_vline(data=releases, linetype="dashed", color="#DEDEDE",
                aes(xintercept=as.numeric(as.POSIXct(freeze)))) +
-    annotate("text", as.POSIXct(releases$release), 0, size=4,
+    annotate("text", as.POSIXct(releases$release), ypos, size=4,
              label=releases$version, hjust=-0.2)
 }
 

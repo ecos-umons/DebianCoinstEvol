@@ -8,7 +8,7 @@ PlotHistory <- function(versions, datadir, filename=NULL, format=NULL) {
   releases <- readRDS(file.path(datadir, "releases.rds"))
   PlotHistoryData(versions, datadir, function(data) {
     p <- PlotTS(data[, list(date, version, packages, conflicts)])
-    print(PlotReleases(p, releases))
+    print(PlotReleases(p, releases, max(data$packages)))
   }, filename, format)
 }
 
@@ -16,7 +16,7 @@ PlotHistoryRatios <- function(versions, datadir, filename=NULL, format=NULL, plo
   if (plot.releases) releases <- readRDS(file.path(datadir, "releases.rds"))
   PlotHistoryData(versions, datadir, function(data) {
     p <- PlotTS(data[, list(date, version, " "=conflicts / packages)])
-    if (plot.releases) p <- PlotReleases(p, releases)
+    if (plot.releases) p <- PlotReleases(p, releases, max(data[, conflicts / packages]))
     print(p)
   }, filename, format)
 }
